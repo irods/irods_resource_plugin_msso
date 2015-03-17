@@ -1,0 +1,6 @@
+iRODS WOS Resource Plugin
+-------------------------
+
+To build this resource plugin:
+
+  ./packaging/build.sh
