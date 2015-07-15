@@ -9,6 +9,8 @@
 #include "irods_structured_object.hpp"
 #include "irods_resource_backport.hpp"
 #include "irods_stacktrace.hpp"
+#include "irods_configuration_keywords.hpp"
+#include "irods_server_properties.hpp"
 
 
 #define NUM_MSSO_SUB_FILE_DESC 1024
@@ -1841,12 +1843,21 @@ extern "C" {
         if ( status < 0 ) {
             return ERROR( status, "rsFileStat failed" );
         }
+
+        int max_buf_sz = 4096;
+        irods::error ret = irods::get_server_property(
+                               irods::CFG_MAX_SIZE_FOR_SINGLE_BUFFER,
+                               max_buf_sz );
+        if( !ret.ok() ) {
+            return PASS( ret );
+        }
+
         //if( strstr( &(subFile->subFilePath[strlen(subFile->subFilePath) -5]),
         //    ".run") != NULL && (*subStructFileStatOut)->st_size == 0 )
         const std::string& path = fco->sub_file_path();
         if ( std::string::npos != path.find( ".run", path.size() - 5 ) &&
                 rods_stat->st_size == 0 ) {
-            rods_stat->st_size = MAX_SZ_FOR_SINGLE_BUF - 20;
+            rods_stat->st_size = max_buf_sz - 20;
         }
 
         rodsStatToStat( _statbuf, rods_stat );

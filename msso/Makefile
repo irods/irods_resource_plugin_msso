@@ -31,7 +31,7 @@ DEPS = $(patsubst %.cpp, ${DEPDIR}/%.d, ${SRCS})
 
 GCC = g++ -DRODS_SERVER
 
-INC = -I/usr/include/irods ${EXTRAINCS}
+INC = -I/usr/include/irods -I/usr/include/irods/boost -I/usr/include/irods/jansson/src ${EXTRAINCS}
 
 .PHONY: clean
 
